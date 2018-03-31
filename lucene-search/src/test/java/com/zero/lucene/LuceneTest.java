@@ -4,7 +4,7 @@ import com.chenlb.mmseg4j.analysis.ComplexAnalyzer;
 import com.zero.Application;
 import com.zero.common.model.Article;
 import com.zero.service.ArticleService;
-import com.zero.service.LuceneService;
+import com.zero.service.LuceneIndexService;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -42,7 +42,7 @@ public class LuceneTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(LuceneTest.class);
 
     @Autowired
-    private LuceneService luceneService;
+    private LuceneIndexService luceneIndexService;
 
     @Autowired
     private ArticleService articleService;
@@ -54,7 +54,7 @@ public class LuceneTest {
     public void testIndexWriter() {
         IndexWriter indexWriterOfDisk = null;
         try {
-            indexWriterOfDisk = luceneService.getIndexWriter(true);
+            indexWriterOfDisk = luceneIndexService.getIndexWriter(true);
             //创建Document对象
             Document doc;
             //为Document 添加Field
@@ -94,7 +94,7 @@ public class LuceneTest {
         long id = 567;
         LOGGER.info("修改id{},data={}", id);
         testQueryById();
-        try (IndexWriter indexWriter = luceneService.getIndexWriter(false)) {
+        try (IndexWriter indexWriter = luceneIndexService.getIndexWriter(false)) {
 
             Term term = new Term("id", String.valueOf(id));
             Document doc = new Document();
@@ -122,7 +122,7 @@ public class LuceneTest {
     @Test
     public void testDeleteDocument() throws IOException {
 
-        try (IndexWriter indexWriter = luceneService.getIndexWriter(false)) {
+        try (IndexWriter indexWriter = luceneIndexService.getIndexWriter(false)) {
 
             String field = "title";
             String value = "迈阿密 - 第二大金融中心";
@@ -149,7 +149,7 @@ public class LuceneTest {
      */
     @Test
     public void testDeleteByQuery() throws IOException {
-        try (IndexWriter indexWriter = luceneService.getIndexWriter(false)) {
+        try (IndexWriter indexWriter = luceneIndexService.getIndexWriter(false)) {
             Query query = LongPoint.newExactQuery("id", 569);
             indexWriter.deleteDocuments(query);
             indexWriter.commit();
@@ -324,7 +324,7 @@ public class LuceneTest {
     @Test
     public void queryParseTest() throws IOException {
         String searchField = "content";
-        Analyzer analyzer = luceneService.getAnalyzer();
+        Analyzer analyzer = luceneIndexService.getAnalyzer();
 
         //指定搜索词段和分析器
         QueryParser parser = new QueryParser(searchField, analyzer);
@@ -342,7 +342,7 @@ public class LuceneTest {
      */
     @Test
     public void multiFieldQueryParserTest() {
-        Analyzer analyzer = luceneService.getAnalyzer();
+        Analyzer analyzer = luceneIndexService.getAnalyzer();
         String[] fieldStr = new String[]{"title", "content"};
         QueryParser queryParser = new MultiFieldQueryParser(fieldStr, analyzer);
 
@@ -389,14 +389,14 @@ public class LuceneTest {
      */
     @Test
     public void highlighterTest() throws ParseException, IOException, InvalidTokenOffsetsException {
-        Analyzer analyzer = luceneService.getAnalyzer();
+        Analyzer analyzer = luceneIndexService.getAnalyzer();
         String searchField = "content";
         String text = "美国买房";
         //指定搜索字段和分析器
         QueryParser queryParser = new QueryParser(searchField, analyzer);
 
         Query query = queryParser.parse(text);
-        IndexSearcher indexSearcher = luceneService.getIndexSearcher();
+        IndexSearcher indexSearcher = luceneIndexService.getIndexSearcher();
         TopDocs topDocs = indexSearcher.search(query, 100);
 
         // 关键字高亮显示的html标签，需要导入lucene-highlighter-xxx.jar
@@ -423,7 +423,7 @@ public class LuceneTest {
      * @throws IOException
      */
     public void executeQuery(Query query, int pageSize) throws IOException {
-        IndexSearcher indexSearcher = luceneService.getIndexSearcher();
+        IndexSearcher indexSearcher = luceneIndexService.getIndexSearcher();
         TopDocs topDocs = indexSearcher.search(query, pageSize);
         LOGGER.info("总共查询到{}个文档", topDocs.totalHits);
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {

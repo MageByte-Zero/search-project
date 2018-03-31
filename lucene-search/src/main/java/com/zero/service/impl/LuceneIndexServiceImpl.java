@@ -1,6 +1,6 @@
 package com.zero.service.impl;
 
-import com.zero.service.LuceneService;
+import com.zero.service.LuceneIndexService;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -25,9 +25,9 @@ import java.nio.file.Paths;
  * @date 2018/3/21
  */
 @Service
-public class LuceneServiceImpl implements LuceneService, InitializingBean {
+public class LuceneIndexServiceImpl implements LuceneIndexService, InitializingBean {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LuceneServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LuceneIndexServiceImpl.class);
 
     /**
      * 索引存放的位置:磁盘

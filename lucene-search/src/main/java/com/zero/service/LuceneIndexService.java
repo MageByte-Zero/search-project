@@ -10,7 +10,7 @@ import java.io.IOException;
  * @author jianqing.li
  * @date 2018/3/21
  */
-public interface LuceneService {
+public interface LuceneIndexService {
     /**
      * 返回索引写入器
      * @param create true=创建一个新的索引或者覆写已经存在的索引，
