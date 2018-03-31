@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.dao.UserInfoMapper">
+
+    <!--实体映射-->
+    <resultMap id="userInfoResultMap" type="com.zero.common.model.UserInfo">
+        <!---->
+        <id property="uid" column="uid"/>
+        <!--账号-->
+        <result property="username" column="username"/>
+        <!--名称（昵称或者真实姓名，不同系统不同定义）-->
+        <result property="name" column="name"/>
+        <!--密码-->
+        <result property="password" column="password"/>
+        <!--加密密码的盐-->
+        <result property="salt" column="salt"/>
+        <!--用户状态,0:创建未认证（比如没有激活，没有输入验证码等等）等待验证的用户 , 1:正常状态,2：用户被锁定.-->
+        <result property="state" column="state"/>
+        <!---->
+        <result property="createTime" column="create_time"/>
+        <!---->
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        uid, username, name, password, salt, state, create_time, update_time
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultMap="userInfoResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_info
+        WHERE uid = #{uid}
+    </select>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM user_info
+        WHERE uid = #{uid}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.zero.common.model.UserInfo">
+        INSERT INTO user_info
+        (uid, username, name, password, salt, state, create_time, update_time)
+        VALUES
+            (#{uid}, #{username}, #{name}, #{password}, #{salt}, #{state}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.zero.common.model.UserInfo">
+        INSERT INTO user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                uid,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid!=null">
+                #{uid},
+            </if>
+            <if test="username!=null">
+                #{username},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="password!=null">
+                #{password},
+            </if>
+            <if test="salt!=null">
+                #{salt},
+            </if>
+            <if test="state!=null">
+                #{state},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.zero.common.model.UserInfo">
+        UPDATE user_info
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="salt != null">
+                salt = #{salt},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+
+        </set>
+        WHERE uid = #{uid}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.zero.common.model.UserInfo">
+        UPDATE user_info
+        SET
+            username    = #{username},
+            name        = #{name},
+            password    = #{password},
+            salt        = #{salt},
+            state       = #{state},
+            create_time = #{createTime},
+            update_time = #{updateTime}
+        WHERE uid = #{uid}
+    </update>
+
+    <select id="findByUsername" resultMap="userInfoResultMap" parameterType="String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_info
+        WHERE username = #{username}
+    </select>
+
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.dao.SysRoleMapper">
+
+	<!--实体映射-->
+	<resultMap id="sysRoleResultMap" type="com.zero.common.model.SysRole">
+		<!---->
+		<id property="id" column="id" />
+		<!--角色标识程序中判断使用,如"admin",这个是唯一的:-->
+		<result property="role" column="role" />
+		<!--角色描述;角色描述,UI界面显示使用-->
+		<result property="description" column="description" />
+		<!--是否可用:0否，1-是。如果不可用将不会添加给用户-->
+		<result property="available" column="available" />
+		<!---->
+		<result property="createTime" column="create_time" />
+		<!---->
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	role,	description,	available,	create_time,	update_time
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultMap="sysRoleResultMap" parameterType="java.lang.Long">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM sys_role
+		 WHERE id = #{id}
+	</select>
+
+    <!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		 DELETE FROM sys_role
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.zero.common.model.SysRole">
+		 INSERT INTO sys_role
+ 		(id,role,description,available,create_time,update_time) 
+		 VALUES 
+ 		(#{id},#{role},#{description},#{available},#{createTime},#{updateTime}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.zero.common.model.SysRole">
+		 INSERT INTO sys_role
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="role != null">
+				 role,
+			</if>
+			<if test="description != null">
+				 description,
+			</if>
+			<if test="available != null">
+				 available,
+			</if>
+			<if test="createTime != null">
+				 create_time,
+			</if>
+			<if test="updateTime != null">
+				 update_time,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="role!=null">
+				 #{role},
+			</if>
+			<if test="description!=null">
+				 #{description},
+			</if>
+			<if test="available!=null">
+				 #{available},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.zero.common.model.SysRole">
+		 UPDATE sys_role
+ 		 <set> 
+			<if test="role != null">
+				 role = #{role},
+			</if>
+			<if test="description != null">
+				 description = #{description},
+			</if>
+			<if test="available != null">
+				 available = #{available},
+			</if>
+			<if test="createTime != null">
+				 create_time = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				 update_time = #{updateTime},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.zero.common.model.SysRole">
+		 UPDATE sys_role
+		 SET 
+			 role = #{role},
+			 description = #{description},
+			 available = #{available},
+			 create_time = #{createTime},
+			 update_time = #{updateTime}
+		 WHERE id = #{id}
+	</update>
+
+	<select id="findByUid" resultMap="sysRoleResultMap" parameterType="long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+			sys_role
+		WHERE
+			id IN (
+				SELECT
+					role_id
+				FROM
+					sys_user_role
+				WHERE
+					uid = #{uid}
+			)
+		AND available = 1
+	</select>
+
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.dao.ArticleMapper">
+
+    <!--实体映射-->
+    <resultMap id="articleResultMap" type="com.zero.common.model.Article">
+        <!---->
+        <id property="id" column="id"/>
+        <!--创建日期-->
+        <result property="createDate" column="create_date"/>
+        <!--更新日期-->
+        <result property="updateDate" column="update_date"/>
+        <!--是否已删除：0-否、1-是-->
+        <result property="isDeleted" column="is_deleted"/>
+        <!--前端排列权重，从0开始，值越大排列越靠前-->
+        <result property="sequence" column="sequence"/>
+        <!--归属商户唯一编码，爬虫来的房源归属的商户编码为SYS00001-->
+        <result property="merchantId" column="merchant_id"/>
+        <!--所属栏目标识，例如：PLAN_BUY-计划买房、SIGNING_ORDER-签约订房、TRANSFER_RIGHT-产权过户、APPLY_LOAN-贷款办理-->
+        <result property="columnKey" column="column_key"/>
+        <!--标题-->
+        <result property="title" column="title"/>
+        <!--摘要文本-->
+        <result property="abstractTxt" column="abstract_txt"/>
+        <!--来源-->
+        <result property="source" column="source"/>
+        <!--缩略图片entityId-->
+        <result property="imgEntityId" column="img_entity_id"/>
+        <!--全文-->
+        <result property="content" column="content"/>
+        <!--状态：0-草稿、1-发布-->
+        <result property="status" column="status"/>
+        <!--发表时间-->
+        <result property="publishTime" column="publish_time"/>
+        <!--阅读数-->
+        <result property="readNum" column="read_num"/>
+        <!--关联国家的英文编码：CN-中国、US-美国、TH-泰国、JP-日本、AU-澳大利亚-->
+        <result property="countryCode" column="country_code"/>
+    </resultMap>
+
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, create_date, update_date, is_deleted, sequence, merchant_id, column_key, title, abstract_txt, source,
+        img_entity_id, content, status, publish_time, read_num, country_code
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="listArticles" resultMap="articleResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM article
+        WHERE
+          is_deleted = 0
+    </select>
+
+    <select id="getPreAndNext" resultType="com.zero.common.model.Article">
+        SELECT
+            id,
+            title,
+            0 AS isNext
+        FROM
+            article
+        WHERE
+            is_deleted = 0
+        AND `status` = 1
+        AND id = (
+            SELECT
+              MAX(id)
+            FROM article
+            WHERE
+                is_deleted = 0
+            AND `status` = 1
+            <![CDATA[ AND id < #{id}  ]]>
+        )
+
+        UNION ALL
+
+        SELECT
+            id,
+            title,
+            1 AS isNext
+        FROM
+            article
+        WHERE
+            is_deleted = 0
+            AND `status` = 1
+            AND id = (
+                SELECT
+                    MIN(id)
+                FROM article
+                WHERE
+                    is_deleted = 0
+                AND `status` = 1
+                <![CDATA[ AND id > #{id}  ]]>
+            )
+    </select>
+
+</mapper>

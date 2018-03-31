@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.dao.SysRolePermissionMapper">
+
+	<!--实体映射-->
+	<resultMap id="sysRolePermissionResultMap" type="com.zero.common.model.SysRolePermission">
+		<!---->
+		<id property="id" column="id" />
+		<!--权限表id-->
+		<result property="permissionId" column="permission_id" />
+		<!--角色表id-->
+		<result property="roleId" column="role_id" />
+		<!---->
+		<result property="createTime" column="create_time" />
+		<!---->
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	permission_id,	role_id,	create_time,	update_time
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultMap="sysRolePermissionResultMap" parameterType="java.lang.Long">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM sys_role_permission
+		 WHERE id = #{id}
+	</select>
+
+    <!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		 DELETE FROM sys_role_permission
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.zero.common.model.SysRolePermission">
+		 INSERT INTO sys_role_permission
+ 		(id,permission_id,role_id,create_time,update_time) 
+		 VALUES 
+ 		(#{id},#{permissionId},#{roleId},#{createTime},#{updateTime}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.zero.common.model.SysRolePermission">
+		 INSERT INTO sys_role_permission
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="permissionId != null">
+				 permission_id,
+			</if>
+			<if test="roleId != null">
+				 role_id,
+			</if>
+			<if test="createTime != null">
+				 create_time,
+			</if>
+			<if test="updateTime != null">
+				 update_time,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="permissionId!=null">
+				 #{permissionId},
+			</if>
+			<if test="roleId!=null">
+				 #{roleId},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.zero.common.model.SysRolePermission">
+		 UPDATE sys_role_permission
+ 		 <set> 
+			<if test="permissionId != null">
+				 permission_id = #{permissionId},
+			</if>
+			<if test="roleId != null">
+				 role_id = #{roleId},
+			</if>
+			<if test="createTime != null">
+				 create_time = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				 update_time = #{updateTime},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.zero.common.model.SysRolePermission">
+		 UPDATE sys_role_permission
+		 SET 
+			 permission_id = #{permissionId},
+			 role_id = #{roleId},
+			 create_time = #{createTime},
+			 update_time = #{updateTime}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>
