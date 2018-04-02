@@ -44,4 +44,3 @@ hs_err_pid*
 
 common-pojo/src/main/resources/
 common-pojo/src/test/
-lucene-search/src/main/java/com/zero/vo/

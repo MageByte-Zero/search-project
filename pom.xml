@@ -57,6 +57,7 @@
         <lucene.version>7.2.1</lucene.version>
         <ik-analyzers.version>5.1.0</ik-analyzers.version>
         <mmseg4j.version>2.4.0</mmseg4j.version>
+        <dozer.version>6.2.0</dozer.version>
     </properties>
 
     <dependencyManagement>

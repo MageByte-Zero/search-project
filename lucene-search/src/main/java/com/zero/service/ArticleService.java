@@ -10,4 +10,13 @@ import java.util.List;
  */
 public interface ArticleService {
     List<Article> listArticles();
+
+    /**
+     * 全文搜索文章（lucene）
+     * @param keywords
+     * @param pageNum
+     *@param pageSize @return
+     */
+    List<Article> articleSearch(String keywords, int pageNum, int pageSize);
+
 }

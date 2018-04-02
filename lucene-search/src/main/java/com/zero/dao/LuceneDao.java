@@ -134,11 +134,9 @@ public class LuceneDao {
             LOG.info("标识docID={}", docID);
             Document document = indexSearcher.doc(docID);
             /**获取文字高亮的信息begin*/
-            LOG.info("==========================");
             TokenStream tokenStream = analyzer.tokenStream(contentField, new StringReader(document.get(contentField)));
             String content = highlighter.getBestFragment(tokenStream, document.get(contentField));
             LOG.info("content={}", content);
-            LOG.info("==========================");
             /**获取文字高亮的信息end*/
 
             article.setId(Long.parseLong(document.get("id")));

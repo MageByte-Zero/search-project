@@ -19,7 +19,8 @@ public enum ResponseEnum implements IException {
     MQ_ERROR(600, "send RabbitMQ exception"),
     ACCOUNT_NOT_EXITS(406, "账号不存在"),
     PASSWORD_ERROR(407, "密码错误"),
-    AUTHENTICATION_ERROR(408, "登录校验异常");
+    AUTHENTICATION_ERROR(408, "登录校验异常"),
+    SEARCH_ERROR(409, "lucene 搜索异常");
 
     public int code;
     public String message;
@@ -54,7 +55,7 @@ public enum ResponseEnum implements IException {
         return resultVO;
     }
 
-    public final <T> ResultInfo<T> buildNewResultVO(T... arg) {
+    public final <T> ResultInfo<T> buildNewResultInfo(T... arg) {
         ResultInfo resultVO = new ResultInfo<>();
         T result = ArrayUtils.isNotEmpty(arg) ? arg[0] : null;
         resultVO.setData(result);
