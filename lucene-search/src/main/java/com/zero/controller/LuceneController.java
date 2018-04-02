@@ -2,6 +2,7 @@ package com.zero.controller;
 
 import com.zero.common.ResultInfo;
 import com.zero.common.model.Article;
+import com.zero.common.utils.DozerMapperUtils;
 import com.zero.service.ArticleService;
 import com.zero.vo.ArticleVO;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,7 @@ public class LuceneController {
                              @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         List<Article> articleList = articleService.articleSearch(keywords, pageNum, pageSize);
-        return SUCCESS.buildNewResultInfo(articleList);
+        List<ArticleVO> voList = DozerMapperUtils.beanCopy(articleList, ArticleVO.class);
+        return SUCCESS.buildNewResultInfo(voList);
     }
 }
